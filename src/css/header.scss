@@ -1,0 +1,23 @@
+.header{
+  .headerBar{
+    height: 64px;
+
+    .gutter-row{
+      line-height: 64px;
+    }
+    .logoBox{
+      padding-left: 40px;
+    }
+    .logo{
+      width: 150px;
+      height: 40px;
+      vertical-align: middle;
+    }
+  }
+}
+.ant-dropdown .ant-dropdown-arrow:before{
+  background: black;
+}
+.ant-input-group-wrapper{
+  vertical-align: middle;
+}
