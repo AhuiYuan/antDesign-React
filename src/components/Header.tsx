@@ -1,6 +1,5 @@
-import React, {useState} from 'react';
+import React, { useState} from 'react';
 import type {MenuProps} from 'antd';
-
 import '../css/App.css'
 import '../css/header.scss'
 import {
@@ -14,19 +13,21 @@ import {
 } from 'antd';
 
 import { UserOutlined,TranslationOutlined } from '@ant-design/icons';
+import {NavLink, useNavigate} from 'react-router-dom';
+
 const { useToken } = theme;
-const items2: MenuProps['items'] = [
+const navList: MenuProps['items'] = [
     {
-        label: 'Home',
-        key: 'mail',
+        label:'Home',
+        key: 'Home',
     },
     {
-        label: 'Product',
-        key: 'app',
+        label: 'About',
+        key: 'About',
     },
     {
-        label: 'News',
-        key: 'alipay',
+        label: 'Contact',
+        key: 'Contact',
     },
 ];
 const items: MenuProps['items'] = [
@@ -60,8 +61,8 @@ const App: React.FC = () => {
         background:'black',
         color:'white',
     };
-    const [current, setCurrent] = useState('mail');
-
+    const [current, setCurrent] = useState('Home');
+    const navigate = useNavigate()
     const onClick: MenuProps['onClick'] = (e) => {
         console.log('click ', e);
         setCurrent(e.key);
@@ -75,19 +76,19 @@ const App: React.FC = () => {
     }}>
         <div className="headerBar">
             <Row align="middle">
-                <Col className="gutter-row logoBox" span={3} >
+                <Col className="gutter-row logoBox"  xs={8} sm={6} md={6} lg={6} xl={4} xxl={3}>
                     <img className="logo" src="/img/band.png" alt="band"/>
                 </Col>
-                <Col className="gutter-row" span={5}>
+                <Col className="gutter-row" xs={8} sm={6} md={5} lg={5} xl={5} xxl={5}>
                     <div>
                         <Search size="large" placeholder="input search text" onSearch={onSearch} enterButton />
                     </div>
                 </Col>
-                <Col  className="gutter-row" span={12} style={{display:'flex',justifyContent:'flex-end'}}>
-                    <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items2} style={{borderBottom:'none'}}/>
+                <Col  className="gutter-row"  xs={8} sm={6} md={5} lg={8} xl={10} xxl={11} style={{display:'flex',justifyContent:'flex-end'}}>
+                   <Menu onClick={onClick}  selectedKeys={[current]} mode="horizontal" items={navList} style={{borderBottom:'none'}}/>
                 </Col>
                 <Divider type="vertical" />
-                <Col className="gutter-row" span={2} >
+                <Col className="gutter-row" >
                     <div style={{paddingLeft:'20px'}}>
                         <UserOutlined /> login & register
                     </div>
