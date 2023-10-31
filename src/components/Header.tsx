@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import type {MenuProps} from 'antd';
 import '../css/App.css'
 import '../css/header.scss'
@@ -13,24 +13,49 @@ import {
 } from 'antd';
 
 import { UserOutlined,TranslationOutlined } from '@ant-design/icons';
-import {useNavigate,useLocation } from 'react-router-dom';
+import {useLocation, Link} from 'react-router-dom';
+import apiClient from "../serve/request";
 
 
 const { useToken } = theme;
-const navList: MenuProps['items'] = [
-    {
-        label:'Home',
-        key: 'home',
-    },
-    {
-        label: 'About',
-        key: 'about',
-    },
-    {
-        label: 'Contact',
-        key: 'contact',
-    },
-];
+
+/*菜单*/
+interface headNavList {
+    headColumn:[];
+    title: string;
+    url: string;
+}
+
+const NavBar=()=>{
+    const [headNav, setHeadNav] = useState<headNavList[]>([]); // 用于保存请求的用户数据
+    useEffect(() => {
+        // 发起 GET 请求
+        apiClient.get<headNavList>('/config')
+            .then(response => {
+                setHeadNav(response.headColumn)
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }, []);
+    const NavStyle: React.CSSProperties = {
+        background: 'none',
+        borderBottom:'none',
+    };
+    const location = useLocation();
+
+    return (
+        <Menu selectedKeys={[location.pathname]} mode="horizontal"  style={NavStyle}>
+            {headNav.map((ele,idx)=>(
+                <Menu.Item key={ele.url}>
+                    <Link to={ele.url} key={idx}>{ele.title}</Link>
+                </Menu.Item>
+            ))}
+        </Menu>
+    )
+}
+
+/*语言*/
 const items: MenuProps['items'] = [
     {
         label: (
@@ -42,36 +67,15 @@ const items: MenuProps['items'] = [
         key: 'ok',
     },
 ];
-const NavBar=()=>{
-    const NavStyle: React.CSSProperties = {
-        background: 'none',
 
-        borderBottom:'none',
-    };
-    const location = useLocation();
-    const path = location.pathname.substring(1);
-    const [current, setCurrent] = useState(path);
-
-    const navigate = useNavigate()
-    const onClick: MenuProps['onClick'] = (e) => {
-        console.log('click ', e);
-        setCurrent(e.key);
-        navigate(`/${e.key.toLowerCase()}`); // 根据菜单项的 key 值进行路由跳转
-    };
-    return (
-        <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={navList} style={NavStyle}/>
-    )
-}
-
-
-
+/*搜索*/
 const { Search } = Input;
 const onSearch = (value: string) => console.log(value);
 
+
+
 const App: React.FC = () => {
     const { token } = useToken();
-
-
     const contentStyle: React.CSSProperties = {
         backgroundColor: token.colorBgElevated,
         borderRadius: token.borderRadiusLG,
@@ -83,10 +87,6 @@ const App: React.FC = () => {
         background:'black',
         color:'white',
     };
-
-
-
-
     return <Affix offsetTop={0} onChange={(affixed) => console.log(affixed)}>
         <div className="header" style={{
             position: 'static',
